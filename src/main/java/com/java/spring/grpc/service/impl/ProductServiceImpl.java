@@ -1,6 +1,7 @@
 package com.java.spring.grpc.service.impl;
 
 import com.java.spring.grpc.converter.ProductConverter;
+import com.java.spring.grpc.exception.AlreadyExistsException;
 import com.java.spring.grpc.repository.ProductRepository;
 import com.java.spring.grpc.service.ProductService;
 import com.java.spring.grpc.to.ProductInputTo;
@@ -20,6 +21,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductOutputTo save(ProductInputTo to) {
+        this.checkDuplicity(to.getName());
         var newProduct = this.productRepository.save(ProductConverter.productInputToProduct(to));
         return ProductConverter.productToProductOutputTo(newProduct);
     }
@@ -38,5 +40,10 @@ public class ProductServiceImpl implements ProductService {
     public void delete(long id) {
         var product = this.productRepository.findById(id).orElseThrow();
         this.productRepository.delete(product);
+    }
+
+    private void checkDuplicity(String name) {
+        this.productRepository.findByNameIgnoreCase(name)
+                .ifPresent(e -> { throw new AlreadyExistsException(name); });
     }
 }
