@@ -4,7 +4,7 @@ import io.grpc.Status;
 
 public class AlreadyExistsException extends BaseBussinessException {
 
-    private static final String ERROR_MESSAGE = "Item %s já está cadastrado no sistema.";
+    private static final String ERROR_MESSAGE = "Item '%s' já está cadastrado no sistema.";
     private final String name;
 
     public AlreadyExistsException(String name) {
