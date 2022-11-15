@@ -2,27 +2,28 @@ package com.java.spring.grpc.service;
 
 import com.java.spring.grpc.domain.Product;
 import com.java.spring.grpc.exception.AlreadyExistsException;
+import com.java.spring.grpc.exception.NotFoundException;
 import com.java.spring.grpc.repository.ProductRepository;
 import com.java.spring.grpc.service.impl.ProductServiceImpl;
 import com.java.spring.grpc.to.ProductInputTo;
-import com.java.spring.grpc.to.ProductOutputTo;
+import io.grpc.StatusRuntimeException;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ProductServiceTest {
+class ProductServiceImplTest {
 
     @Mock
     private ProductRepository productRepository;
@@ -41,7 +42,7 @@ class ProductServiceTest {
 
         var output = this.productServiceImpl.save(input);
 
-        Assertions.assertThat(product)
+        assertThat(product)
                 .usingRecursiveComparison()
                 .isEqualTo(output);
     }
@@ -55,7 +56,7 @@ class ProductServiceTest {
 
         var output = this.productServiceImpl.findById(1L);
 
-        Assertions.assertThat(product)
+        assertThat(product)
                 .usingRecursiveComparison()
                 .isEqualTo(output);
     }
@@ -69,9 +70,19 @@ class ProductServiceTest {
 
         var input = new ProductInputTo("Product Name", 10.0, 8);
 
-        Assertions
-                .assertThatExceptionOfType(AlreadyExistsException.class)
+        assertThatExceptionOfType(AlreadyExistsException.class)
                 .isThrownBy(() -> this.productServiceImpl.save(input));
+    }
+
+    @Test
+    @DisplayName("NotFoundException when product don't exist on database.")
+    void findAProductByIdProductExceptionTest() {
+        final long ID = 1L;
+
+        when(this.productRepository.findById(any())).thenReturn(Optional.empty());
+
+        assertThatExceptionOfType(NotFoundException.class)
+                .isThrownBy(() -> this.productServiceImpl.findById(ID));
     }
 
 }

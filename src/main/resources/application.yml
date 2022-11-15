@@ -2,10 +2,13 @@ spring:
   datasource:
     username: root
     password: root
-    url: jdbc:h2:mem:devdb;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:java_spring_grpc;DB_CLOSE_ON_EXIT=FALSE
     driverClassName: org.h2.Driver
   jpa:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
     database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create
+    show-sql: true

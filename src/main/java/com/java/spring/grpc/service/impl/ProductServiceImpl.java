@@ -2,6 +2,7 @@ package com.java.spring.grpc.service.impl;
 
 import com.java.spring.grpc.converter.ProductConverter;
 import com.java.spring.grpc.exception.AlreadyExistsException;
+import com.java.spring.grpc.exception.NotFoundException;
 import com.java.spring.grpc.repository.ProductRepository;
 import com.java.spring.grpc.service.ProductService;
 import com.java.spring.grpc.to.ProductInputTo;
@@ -28,7 +29,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductOutputTo findById(long id) {
-        return ProductConverter.productToProductOutputTo(this.productRepository.findById(id).orElseThrow());
+        return ProductConverter.productToProductOutputTo(
+                this.productRepository.findById(id).orElseThrow(() -> new NotFoundException(id))
+        );
     }
 
     @Override
