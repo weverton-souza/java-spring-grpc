@@ -43,20 +43,18 @@ public class ProductServiceTest {
                 .isEqualTo(output);
     }
 
-//    @Test
-//    @DisplayName("Find a product by Id")
-//    public void findAProductByIdProductSuccessTest() {
-//        var product = new Product(1L, "Product Name", 10.0, 8);
-//
-//        Mockito.when(productRepository.findById(1L)).thenReturn(Optional.of(product));
-//
-//        var input = new ProductInputTo("Product Name", 10.0, 8);
-//
-//        var output = this.productServiceImpl.save(input);
-//
-//        Assertions.assertThat(product)
-//                .usingRecursiveComparison()
-//                .isEqualTo(output);
-//    }
+    @Test
+    @DisplayName("Find a product by Id")
+    public void findAProductByIdProductSuccessTest() {
+        var product = new Product(1L, "Product Name", 10.0, 8);
+
+        Mockito.when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+
+        var output = this.productServiceImpl.findById(1L);
+
+        Assertions.assertThat(product)
+                .usingRecursiveComparison()
+                .isEqualTo(output);
+    }
 
 }

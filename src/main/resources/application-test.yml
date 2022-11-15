@@ -1,0 +1,20 @@
+# gRPC Server configuration
+grpc:
+  client:
+    in-process:
+      address: in-process:test
+  server:
+    port: '-1'
+    in-process-name: test
+
+spring:
+  datasource:
+    username: sa
+    url: jdbc:h2:mem:devdb;DB_CLOSE_ON_EXIT=FALSE
+    driverClassName: org.h2.Driver
+    password: password
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.H2Dialect
