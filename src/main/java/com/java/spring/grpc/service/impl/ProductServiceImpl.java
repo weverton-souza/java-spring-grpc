@@ -7,8 +7,8 @@ import com.java.spring.grpc.repository.ProductRepository;
 import com.java.spring.grpc.service.ProductService;
 import com.java.spring.grpc.to.ProductInputTo;
 import com.java.spring.grpc.to.ProductOutputTo;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,13 +35,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductOutputTo> findAll(Pageable pageable) {
-        return this.productRepository.findAll(pageable).map(ProductConverter::productToProductOutputTo);
+    public List<ProductOutputTo> findAll() {
+        return this.productRepository.findAll().stream()
+                .map(ProductConverter::productToProductOutputTo)
+                .collect(Collectors.toList());
     }
 
     @Override
     public void delete(long id) {
-        var product = this.productRepository.findById(id).orElseThrow();
+        var product = this.productRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
         this.productRepository.delete(product);
     }
 

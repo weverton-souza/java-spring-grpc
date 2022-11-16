@@ -6,6 +6,8 @@ import com.java.spring.grpc.to.ProductOutputTo;
 
 public class ProductConverter {
 
+    private ProductConverter() { /* TODO document why this constructor is empty */ }
+
     public static ProductOutputTo productToProductOutputTo(Product product) {
         return new ProductOutputTo(product.getId(), product.getName(), product.getPrice(), product.getQuantity());
     }
